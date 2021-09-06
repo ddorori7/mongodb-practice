@@ -51,3 +51,37 @@ post.createdAt = new Date();
 // save : 다큐멘트에 _id 필드가 있으면
 //	update (갱신)
 db.posts.save(post)
+
+// 기존 문서의 갱신(Update)
+/* 
+db.컬렉션명.update(
+	{ 변경 문서의 조건 },
+	{ $set: 
+		{ 업데이트할 내용 }
+	}
+);
+*/
+db.posts.update(
+	{ "title": "First Post" },
+	{ $set:
+		{ createdAt: new Date(),
+		  updatedAt: new Date() }
+	}
+)
+
+// 객체의 삭제 : .remove
+post = db.posts.findOne()
+db.posts.remove(post)
+
+// 검색 조건 객체를 이용한 삭제
+db.posts.remove({title: /Second/})
+
+
+/*
+db.posts 컬렉션에
+title: "First Post", by: "bit", likes: 10
+title: "Second Post", by: "hong", likes: 50
+title: "Third Post", by: "bit", likes: 30
+title: "Fourth Post:, by: "hong", likes: 10
+INSERT 연습
+*/
