@@ -97,7 +97,7 @@ db.posts.insert({
     title: "Second Post",
     by: "hong",
     likes: 50
-)}
+})
 
 db.posts.insert({
     title: "Third Post",
