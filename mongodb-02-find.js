@@ -1,13 +1,14 @@
 // const MongoClient = require("mongodb").MongoClient;
 // 객체 구조 할당 방식(위와 같은 역할)
+const { MongoClient } = require("mongodb");
+const { resourceUsage } = require("process");
+
 // 다른 모듈에서 내보낸 함수 가져오기
 // const {
 //   testInsertOneDoc,
 //   testInsertManyDocs,
 //   testDeleteAll,
 // } = require("./mongodb-01-crud");
-const { MongoClient } = require("mongodb");
-const { resourceUsage } = require("process");
 
 const url = "mongodb://localhost:27017"; // 접속 URL
 const client = new MongoClient(url, { useNewUrlParser: true });
