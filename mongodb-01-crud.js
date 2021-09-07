@@ -7,6 +7,7 @@ const client = new MongoClient(url, { useNewUrlParser: true });
 
 //  접속 테스트
 function testConnect() {
+  const client = new MongoClient(url, { useNewUrlParser: true });
   client.connect((err, client) => {
     //  콜백
     /*
@@ -35,6 +36,7 @@ function testConnect() {
 //  INSERT INTO mydb.friends VALUE(...);
 //  db.friends.insert({ 문서 })
 function testInsertOne(name) {
+  const client = new MongoClient(url, { useNewUrlParser: true });
   client
     .connect()
     .then((client) => {
@@ -60,6 +62,7 @@ function testInsertOne(name) {
 //  INSERT INTO friends VALUE(...), (...), (...)
 //  db.friends.insertMany([ { 문서 }, { 문서 }, ...])
 function testInsertMany(names) {
+  const client = new MongoClient(url, { useNewUrlParser: true });
   console.log(names, "는 배열?", Array.isArray(names));
   if (Array.isArray(names)) {
     //  names가 배열
@@ -90,6 +93,7 @@ function testInsertMany(names) {
 // DELETE FROM friends [WHERE ...]
 // db.friends.delete, db.friends.deleteMany({조건객체})
 function testDeleteAll() {
+  const client = new MongoClient(url, { useNewUrlParser: true });
   client.connect().then((client) => {
     const db = client.db("mydb");
     db.collection("friends")
@@ -103,6 +107,7 @@ function testDeleteAll() {
 // testDeleteAll();
 
 function testInsertOneDoc(doc) {
+  const client = new MongoClient(url, { useNewUrlParser: true });
   client.connect().then((client) => {
     const db = client.db("mydb");
     db.collection("friends")
@@ -122,6 +127,7 @@ function testInsertOneDoc(doc) {
 // });
 
 function testInsertManyDocs(docs) {
+  const client = new MongoClient(url, { useNewUrlParser: true });
   client.connect().then((client) => {
     const db = client.db("mydb");
     if (Array.isArray(docs)) {
@@ -138,15 +144,42 @@ function testInsertManyDocs(docs) {
     }
   });
 }
-testInsertManyDocs([
-  { name: "고길동", gender: "남성", species: "인간", age: 50 },
-  { name: "둘리", gender: "남성", species: "공룡", age: 10000000 },
-  { name: "도우너", gender: "남성", species: "외계인", age: 15 },
-  { name: "또치", gender: "여성", species: "조류", age: 15 },
-  { name: "영희", gender: "여성", species: "인간", age: 12 },
-]);
+// testInsertManyDocs([
+//   { name: "고길동", gender: "남성", species: "인간", age: 50 },
+//   { name: "둘리", gender: "남성", species: "공룡", age: 10000000 },
+//   { name: "도우너", gender: "남성", species: "외계인", age: 15 },
+//   { name: "또치", gender: "여성", species: "조류", age: 15 },
+//   { name: "영희", gender: "여성", species: "인간", age: 12 },
+// ]);
 
 // 함수 내보내기: 다른 모듈에서 사용할 수 있게
 exports.testInsertOneDoc = testInsertOneDoc;
 exports.testInsertManyDocs = testInsertManyDocs;
 exports.testDeleteAll = testDeleteAll;
+
+function testUpdateByJob(name, job) {
+  // name이 일치하는 문서의 job 필드를 업데이트
+  const client = new MongoClient(url, { useNewUrlParser: true });
+  client.connect().then((client) => {
+    const db = client.db("mydb");
+    db.collection("friends")
+      .updateMany(
+        { name: name } /* 조건 객체 */,
+        {
+          $set: { job: job }, // $set: 연산자 필수
+        }
+      )
+      .then((result) => {
+        console.log(
+          result.modifiedCount,
+          "개 업데이트,",
+          result.upsertedCount,
+          "개 업서트"
+        );
+      })
+      .then(() => {
+        client.close();
+      });
+  });
+}
+testUpdateByJob("고길동", "직장인");

@@ -14,6 +14,7 @@ const client = new MongoClient(url, { useNewUrlParser: true });
 
 // 문서 한 개 가져오기
 function testFindOne() {
+  const client = new MongoClient(url, { useNewUrlParser: true });
   client.connect().then((client) => {
     const db = client.db("mydb");
 
@@ -29,6 +30,7 @@ function testFindOne() {
 
 // 문서 전체 가져오기
 function testFindAll() {
+  const client = new MongoClient(url, { useNewUrlParser: true });
   client
     .connect()
     .then((client) => {
@@ -51,4 +53,90 @@ function testFindAll() {
       console.error(reason);
     });
 }
-testFindAll();
+// testFindAll();
+
+// 조건 검색
+// SELECT * FROM friends WHERE name='____'
+// 조건 객체 { name: '값' } : =
+function testFindByName(name) {
+  const client = new MongoClient(url, { useNewUrlParser: true });
+  client.connect().then((client) => {
+    const db = client.db("mydb");
+
+    db.collection("friends")
+      .find(
+        /* 조건 객체 */
+        { name: name } // 키 : 변수명 -> 일치하면 { name }으로 써도 ㅇ
+      )
+      .toArray()
+      .then((result) => {
+        for (let doc of result) {
+          console.log(doc);
+        }
+      })
+      .then(() => {
+        client.close();
+      })
+      .catch((reason) => {
+        console.error(reason);
+      });
+  });
+}
+// testFindByName("고길동");
+
+// 조건 조합 검색
+// SELECT * FROM ... WHERE cond1 and(or) cond2
+function testFindCombinedWhere() {
+  const client = new MongoClient(url, { useNewUrlParser: true });
+  client.connect().then((client) => {
+    const db = client.db("mydb");
+    db.collection("friends")
+      .find(
+        /* gender: 여성 and species: 인간 */
+        /* 
+        { $and: [{ gender: " 여성" }, { species: "인간" }] }
+       */
+
+        /* species: 인간 or age > 15 */
+        { $or: [{ species: "인간" }, { age: { $gt: 15 } }] }
+      )
+      .toArray()
+      .then((result) => {
+        for (let doc of result) {
+          console.log(doc);
+        }
+      })
+      .then(() => {
+        client.close();
+      });
+  });
+}
+// testFindCombinedWhere();
+
+// projection
+function testFindProjection() {
+  const client = new MongoClient(url, { useNewUrlParser: true });
+  client.connect().then((client) => {
+    const db = client.db("mydb");
+    db.collection("friends")
+      .find({} /* 검색 조건(없으면 전체대상) */)
+      // 표시할 필드 선택(project) -> 키 : 1(표시), 키 : 2(생략)
+      //   .project({ name: 1, age: 1 })
+      .project({ _id: 0 }) // 특정 필드만 표시하지 않을 때
+      .skip(2) // 2문서 건너뛰기
+      .limit(2) // 2문서 표시
+      .toArray()
+      .then((docs) => {
+        for (let doc of docs) {
+          console.log(doc);
+        }
+      })
+      .then(() => {
+        client.close();
+      })
+      .catch((reason) => {
+        console.error(reason);
+      });
+  });
+}
+testFindProjection();
