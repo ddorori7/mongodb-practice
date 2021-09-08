@@ -2,16 +2,17 @@
 const express = require("express");
 const http = require("http"); //  노드 기본 http 모듈
 
-//  express 생성
+//  express 객체 생성
 const app = express();
 
-//  설정, 속성을 집어넣을 때
-//  set(키, 값)
-//  get(키)
+//  서버 설정, 속성을 집어넣을 때
+//  set(키, 값) -> 서버 설정 속성 지정
+//  get(키) -> 서버 설정 속성 읽기
 
 //  etag를 사용하지 않음
 app.set("etag", false);
 
+//  express 기본 포트 속성을 설정
 //  환경 변수에 PORT 가 설정되어 있으면 그 값을 사용
 //  설정이 안되어 있으면 3000
 app.set("port", process.env.PORT || 3000);
@@ -20,12 +21,14 @@ app.set("port", process.env.PORT || 3000);
 //  npm install morgan
 //  로거 불러오기
 const logger = require("morgan"); //  로거 불러오기
-//  로거를 express에 추가: 마들웨어 추가
+//  로거를 express에 추가: 미들웨어 추가
 app.use(logger("dev"));
 
 //  정적 웹의 제공
 //  미들웨어 express.static 미들웨어 함수를 등록
 app.use(express.static(__dirname + "/public"));
+//  __dirname -> 현재 실행중인 코드의 디렉터리 경로
+//  use([path,] function) 미들웨어 사용
 
 //  View 엔진 설정
 app.set("view engine", "ejs"); //  뷰엔진으로 ejs 사용 선언

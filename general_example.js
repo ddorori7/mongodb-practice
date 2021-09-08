@@ -1,3 +1,5 @@
+// ticker.js와 함께
+
 const Ticker = require("./module/ticker.js");
 let count = 0; // 카운트 변수
 
