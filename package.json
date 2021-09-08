@@ -1,0 +1,26 @@
+{
+  "name": "mongodb-practice",
+  "version": "1.0.0",
+  "main": "general_example.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddorori7/mongodb-practice.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ddorori7/mongodb-practice/issues"
+  },
+  "homepage": "https://github.com/ddorori7/mongodb-practice#readme",
+  "keywords": [],
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
