@@ -1,4 +1,5 @@
 const express = require("express");
+const { get } = require("http");
 const router = express.Router();
 const { ObjectId } = require("mongodb"); // ObjectId를 처리하기 위한 객체
 
@@ -42,7 +43,9 @@ module.exports = (app) => {
       .insertOne(document)
       .then((result) => {
         console.log(result);
-        resp.status(200).send("SUCCESS: 친구를 추가했습니다.");
+        resp.status(200);
+        //   .send("SUCCESS: 친구를 추가했습니다.");
+        resp.redirect("/web/friends/list");
       })
       .catch((reason) => {
         console.error(reason);
@@ -80,5 +83,47 @@ module.exports = (app) => {
       });
   });
 
+  //   수정 폼
+  router.get("/friends/to-modify-form/:id", (req, resp) => {
+    let db = app.get("db");
+    console.log("수정할 id:", req.params.id);
+    //  쿼리 수행
+    db.collection("friends")
+      .findOne({ _id: ObjectId(req.params.id) })
+      .then((result) => {
+        console.log(result);
+        //  결과를 템플릿에 반영
+        resp.render("friend_modify_form", { friends: result });
+      })
+      .catch((reason) => {
+        console.error(reason);
+      });
+  });
+
+  //  수정
+  router.post("/friends/modify/", (req, resp) => {
+    console.log("수정할 ID:", req.body._id);
+    let document = req.body;
+    document.age = parseInt(document.age);
+    let db = app.get("db");
+    db.collection("friends")
+      .updateOne(
+        //  삽질포인트: id값 찾을때 ObjectId()!!
+        { _id: ObjectId(req.body._id) },
+        {
+          $set: {
+            name: req.body.name,
+            species: req.body.species,
+            age: req.body.age,
+          },
+        }
+      )
+      .then((result) => {
+        resp.redirect("/web/friends/list");
+      })
+      .catch((reason) => {
+        resp.status(500).send("<p>수정할 수 없습니다.</p>");
+      });
+  });
   return router;
 };
