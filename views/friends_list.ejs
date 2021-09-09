@@ -18,7 +18,14 @@
 
     <title>Friends List</title>
     <script>
-      // TODO: 스크립트 추가
+      function confirm_delete(oid) {
+        //  alert("삭제할 id:" + oid);
+        let choice = confirm("삭제하시겠습니까?");
+        if (choice) {
+          //  주소를 삭제 처리 URL로 변경
+          document.location.href = "/web/friends/delete/" + oid;
+        }
+      }
     </script>
   </head>
   <body>
@@ -44,13 +51,22 @@
           <!-- TODO: 루프를 돌며 친구 목록을 표시 -->
           <% friends.map((friends, index) => { %>
           <tr>
-            <th scope="row"><%= index+1%></th>
-            <td><a href="#"><%=friends.name%></a></td>
-            <td><%= friends.species%></td>
-            <td><%= friends.age%></td>
+            <th scope="row"><%= index + 1 %></th>
+            <td>
+              <a href="/web/friends/show/<%= friends._id %>"
+                ><%= friends.name %></a
+              >
+            </td>
+            <td><%= friends.species %></td>
+            <td><%= friends.age %></td>
             <td>
               <a href="#" class="btn btn-primary btn-sm">수정</a>
-              <button class="btn btn-danger btn-sm">삭제</button>
+              <button
+                onclick='confirm_delete("<%= friends._id %>")'
+                class="btn btn-danger btn-sm"
+              >
+                삭제
+              </button>
             </td>
           </tr>
           <!-- /TODO-->
