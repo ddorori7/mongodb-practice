@@ -98,6 +98,10 @@ app.get("/render", (req, resp) => {
   resp.contentType("text/html;charset=utf-8").render("render");
 });
 
+//  Router 등록(미들웨어)
+const webRouter = require("./router/WebRouter")(app);
+app.use("/web", webRouter);
+
 function startServer() {
   //  database  연결 정보
   const dburl = "mongodb://localhost:27017";
