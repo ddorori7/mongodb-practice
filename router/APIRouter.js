@@ -18,6 +18,19 @@ function APIRouter(app) {
       });
   });
 
+  router.get("/friends/:id.json", (req, resp) => {
+    let db = app.get("db");
+
+    db.collection("friends")
+      .findOne({ _id: ObjectId(req.params.id) })
+      .then((result) => {
+        resp
+          .status(200)
+          .header({ "Content-Type": "text/json;charset=utf-8" })
+          .json(result);
+      });
+  });
+
   return router;
 }
 
