@@ -1,6 +1,15 @@
 const express = require("express");
 const router = express.Router();
+
 const { ObjectId } = require("mongodb");
+// const mongodb = require("mongodb");
+// const ObjectId = mongodb.ObjectId;
+
+/*
+[app.js 일부]
+//  express 객체 생성
+const app = express();
+*/
 
 function APIRouter(app) {
   router.get("/friends.json", (req, resp) => {
